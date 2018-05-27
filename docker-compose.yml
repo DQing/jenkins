@@ -1,20 +1,22 @@
-version: '2'
+version: "2.2"
 services:
-  mysql:
-    image: mysql:5.7
-    container_name: SpringBoot
-    ports:
-      - 3310:3306
+  _base:
+    image: gradle:4.7.0-jdk8
+    working_dir: /app
     environment:
-      - LANG=C.UTF-8
-      - TERM=dumb
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=Employee
-      - MYSQL_PASSWORD=12345678
-      - MYSQL_USER=douqing
-    networks:
-       main:
-        aliases:
-          - ad
-networks:
-  main:
+      APP_ENV: staging
+    volumes:
+      - ".:/app"
+      - "gradle-cache:/home/gradle/.gradle"
+  dev:
+    extends:
+      service: _base
+    ports:
+      - "8080:8080"
+    command: gradle bootRun
+  build:
+    extends:
+      service: _base
+    command: gradle test
+volumes:
+gradle-cache:
