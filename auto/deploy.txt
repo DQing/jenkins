@@ -1,0 +1,18 @@
+#! /bin/bash -e
+
+REPOSITORY="mylib/hello-spring"
+BUILD_NUMBER=0.0.${BUILD_ID}
+
+cd $(dirname ${BASH_SOURCE[0]})/..
+
+[[ $APP_ENV != "prod" && $APP_ENV != "staging" ]] && \
+echo "Please set environment APP_ENV to be prod or staging" && \
+exit 1
+
+docker rm -f hello-spring-${APP_ENV} || true
+
+docker run -e APP_ENV=${APP_ENV} -d --name hello-spring-${APP_ENV} -p ${PORT}:8080 ${REPOSITORY}:${BUILD_NUMBER}
+
+# docker push ${REPOSITORY}:${FULL_VERSION}
+# docker tag ${REPOSITORY}:${FULL_VERSION} ${REPOSITORY}:latest
+# docker push ${REPOSITORY}:latest

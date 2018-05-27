@@ -12,11 +12,11 @@ services:
     extends:
       service: _base
     ports:
-      - "8080:8080"
+      - "8081:8083"
     command: gradle bootRun
   build:
     extends:
       service: _base
     command: gradle test
 volumes:
-gradle-cache:
+  gradle-cache:
